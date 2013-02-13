@@ -1,5 +1,4 @@
 source "http://rubygems.org"
-source "http://gems.github.com"
 
 
 gem "rake"
@@ -36,5 +35,11 @@ end
 
 
 group :debug do
-  gem (RUBY_VERSION =~ /^1\.9/ ? "ruby-debug19" : "ruby-debug")
+  platforms :mri_18 do
+    gem "ruby-debug"
+  end
+  platforms :mri_19 do
+    gem "ruby-debug19"
+    gem (RUBY_VERSION == "1.9.2" ? "ruby-debug-base19" : "ruby-debug-base19x")
+  end
 end
