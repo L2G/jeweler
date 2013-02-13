@@ -50,7 +50,7 @@ class TestJeweler < Test::Unit::TestCase
 
   should "find the base repo" do
     jeweler = build_jeweler(File.dirname(File.expand_path(__FILE__)))
-    assert_equal File.dirname(File.dirname(File.expand_path(__FILE__))), jeweler.git_base_dir
+    assert_equal File.dirname(File.dirname(File.expand_path(__FILE__))), jeweler.git_base_dir.to_s
   end
 
   should "build and run write gemspec command when writing gemspec" do

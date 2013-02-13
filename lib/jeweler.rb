@@ -151,15 +151,21 @@ class Jeweler
     command.run
   end
 
+  # Find the base directory containing a Git repository, if any.
   def git_base_dir(base_dir = nil)
     if base_dir
-      base_dir = File.dirname(base_dir)
+      base_dir = Pathname.new(base_dir)
     else
-      base_dir = File.expand_path(self.base_dir || ".")
+      base_dir = Pathname.new(self.base_dir || ".")
     end
-    return nil if base_dir==File.dirname("/")
-    return base_dir if File.exists?(File.join(base_dir, '.git'))
-    return git_base_dir(base_dir)
+
+    catch :stop_looking do
+      loop {
+         throw(:stop_looking, base_dir) if (base_dir + '.git').exist?
+         throw(:stop_looking, nil) if base_dir == base_dir.parent
+         base_dir = base_dir.parent
+      }
+    end
   end    
 
   def in_git_repo?
